@@ -11,4 +11,4 @@ Run `node npm_dep.js` from the project directory to install the dependencies. Th
 
 ### Usage:
 
-Run aidiag in the folder with the log files you want analyzed. It will be ingested by OpenAI and open an interactive prompt to converse with the model and get the most likely causes of the error.
+Run `aidiag` in the folder with the log files you want analyzed. It will be ingested by OpenAI and open an interactive prompt to converse with the model and get the most likely causes of the error.
