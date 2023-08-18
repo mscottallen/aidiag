@@ -20,20 +20,20 @@
           state: directory
           mode: 0755
     
-      - name: Copying aidiag script
-        file: 
+      - name: Copying AiDiag script
+        copy: 
           src: aidiag
           dest: /usr/local/bin/aidiag
           mode: 0755
       
       - name: Copying aidiag.js
-        file: 
+        copy: 
           src: aidiag.js
           dest: /usr/local/bin/aidiag/aidiag.js
           mode: 0755
 
       - name: Copying npm-dep.js
-        file: 
+        copy: 
           src: npm-dep.js
           dest: /usr/local/bin/aidiag/npm-dep.js
           mode: 0755
