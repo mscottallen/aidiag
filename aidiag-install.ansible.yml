@@ -1,0 +1,44 @@
+---
+ - name: AiDiag tool installation and configuration
+   hosts: localhost
+   gather_facts: no
+   tasks:
+      - name: Install nodejs
+        yum:
+          name: nodejs
+          state: present
+    
+      - name: Install npm
+        yum:
+          name: npm
+          state: present
+    
+     - name: Install AiDiag tool
+        file:
+          path: /usr/local/bin/aidiag
+          state: directory
+          mode: 0755
+    
+      - name: Copying aidiag script
+          file: 
+            src: aidiag
+            dest: /usr/local/bin/aidiag
+            mode: 0755
+      
+      - name: Copying aidiag.js
+          file: 
+            src: aidiag.js
+            dest: /usr/local/bin/aidiag/aidiag.js
+            mode: 0755
+
+      - name: Copying npm-dep.js
+          file: 
+            src: npm-dep.js
+            dest: /usr/local/bin/aidiag/npm-dep.js
+            mode: 0755
+      
+      - name: Running npm install
+          shell: node /usr/local/bin/aidiag/npm-dep.js
+
+      - name: Sourcing bashrc
+          shell: source ~/.bashrc
