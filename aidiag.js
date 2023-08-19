@@ -8,6 +8,10 @@ const readline = require('readline');
 const API_URL = "https://api.openai.com/v2/engines/davinci/completions";
 const API_KEY = "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";
 
+const path = require('path');
+const globalModules = path.join(require('os').homedir(), '.npm-packages', 'lib', 'node_modules');
+require('module').globalPaths.push(globalModules);
+
 const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout
