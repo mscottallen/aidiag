@@ -14,20 +14,10 @@
           name: npm
           state: present
     
-      - name: Install AiDiag tool
-        file:
-          path: /usr/local/bin/aidiag
-          state: directory
-    
-      - name: Copying AiDiag script
-        copy: 
-          src: aidiag
-          dest: /usr/local/bin/aidiag
-      
       - name: Copying aidiag.js
         copy: 
           src: aidiag.js
-          dest: /usr/local/bin/aidiag/aidiag.js
+          dest: /usr/local/bin/aidiag
 
       - name: Copying npm-dep.js
         copy: 

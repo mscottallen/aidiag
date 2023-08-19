@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const fs = require('fs');
 const axios = require('axios');
 const glob = require('glob');
@@ -11,8 +13,12 @@ const rl = readline.createInterface({
     output: process.stdout
 });
 
-async function aggregateLogs(directory) {
+async function aggregateLogs() {
     return new Promise((resolve, reject) => {
+        // Get the current working directory
+        const directory = process.cwd();
+
+        // Use glob to search for log files in the current directory and its subdirectories
         glob(directory + '/**/*.{log,out,txt,json}', {}, (err, files) => {
             if (err) return reject(err);
 
