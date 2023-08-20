@@ -25,6 +25,7 @@
         copy:
           src: aidiag.py
           dest: /usr/local/aidiag/aidiag.py
+          mode: +x
 
       - name: Copying AiDiag files 2/2
         copy:
@@ -35,6 +36,7 @@
         copy:
           src: aidiag
           dest: /usr/local/bin/aidiag
+          mode: +x
 
       - name: Installing AiDiag requirements
         pip:
