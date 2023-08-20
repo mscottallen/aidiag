@@ -64,14 +64,15 @@ def main():
     parser = argparse.ArgumentParser(description="Send log files in the current directory to ChatGPT for debugging.",
                                      epilog="During the stream of logs, you can press the 'q' key followed by 'Enter' to stop the stream, or use CTRL+C to interrupt it.")
     
-    parser.add_argument("--brief", action="store_true", help="Provide a concise summary of the main issues in the logs.")
-    parser.add_argument("--verbose", action="store_true", default=True, help="Provide a detailed analysis of the logs.")
+    group = parser.add_mutually_exclusive_group()
+    group.add_argument("--brief", action="store_true", help="Provide a concise summary of the main issues in the logs.")
+    group.add_argument("--verbose", action="store_true", help="Provide a detailed analysis of the logs.")
     
     args = parser.parse_args()
 
-    # If both brief and verbose are true, we set verbose to false. This is because verbose is true by default.
-    if args.brief:
-        args.verbose = False
+    # Default to verbose if no option is provided
+    if not args.brief and not args.verbose:
+        args.verbose = True
 
     stream_logs_to_chatgpt(brief=args.brief)
 
