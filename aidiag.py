@@ -8,23 +8,33 @@ load_dotenv()
 # Set up OpenAI API key from the environment variable
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
-def stream_logs_to_chatgpt():
-    log_files = [f for f in os.listdir('.') if os.path.isfile(f) and f.endswith('.log')]
-    
-    for log_file in log_files:
-        with open(log_file, 'r') as file:
-            content = file.read()
-            
-            # Send content to ChatGPT
-            response = openai.Completion.create(
-                engine="davinci",
-                prompt=f"Debug the following log content from file {log_file}:\n\n{content}",
-                max_tokens=500  # Adjust as needed
-            )
-            
-            print(f"Debugging response for {log_file}:")
-            print(response.choices[0].text.strip())
-            print("-------------------------------")
+def get_log_files():
+    """Return the content of all log files in the current directory."""
+    logs = []
+    for file in os.listdir():
+        if file.endswith('.log'):
+            with open(file, 'r') as log_file:
+                logs.append(log_file.read())
+    return logs
 
-if __name__ == "__main__":
-    stream_logs_to_chatgpt()
+def chunk_text(text, size=2000):
+    """Divide a large text into chunks of a specified size."""
+    return [text[i:i+size] for i in range(0, len(text), size)]
+
+def stream_logs_to_chatgpt():
+    openai.api_key = os.getenv("OPENAI_API_KEY")
+    logs = get_log_files()
+    for log in logs:
+        chunks = chunk_text(log)
+        for chunk in chunks:
+            # Your earlier code to send this chunk to ChatGPT and get a response
+            response = openai.Completion.create(
+                model="gpt-4.0-turbo",
+                messages=[
+                    {"role": "system", "content": "You are a helpful assistant."},
+                    {"role": "user", "content": chunk}
+                ]
+            )
+            print(response.choices[0].message['content'])
+
+stream_logs_to_chatgpt()
