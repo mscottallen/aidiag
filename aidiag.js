@@ -20,10 +20,18 @@ const rl = readline.createInterface({
 async function aggregateLogs() {
     return new Promise((resolve, reject) => {
         const directory = process.cwd();
-        glob(directory + '/**/*.{log,out,txt,json}', {}, (err, files) => {
+        glob(directory + '/**/*.{log,out,txt,json}', {}, async (err, files) => {
             if (err) return reject(err);
-            console.log(files); // Just print the files for now
-            resolve();
+            
+            let concatenatedLogs = '';
+            for (let file of files) {
+                concatenatedLogs += await fs.promises.readFile(file, 'utf-8');
+                concatenatedLogs += '\n';  // Separate content of different files
+            }
+            
+            const tmpFilePath = '/tmp/concatenatedLogs.txt';
+            await fs.promises.writeFile(tmpFilePath, concatenatedLogs);
+            resolve(tmpFilePath);
         });
     });
 }
@@ -43,7 +51,10 @@ async function sendToChatGPT(content) {
 
 async function main() {
     try {
-        const logsContent = await aggregateLogs('.');
+        const tmpFilePath = await aggregateLogs();
+        const logsContent = await fs.promises.readFile(tmpFilePath, 'utf-8');
+        
+        console.log('Sending logs to ChatGPT for analysis...');
         console.log(await sendToChatGPT(logsContent));
 
         rl.on('line', async (userInput) => {

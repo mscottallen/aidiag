@@ -1,0 +1,16 @@
+{
+  "name": "aidiag",
+  "version": "1.0.0",
+  "description": "### Dependencies: - Node.js - npm - Python - Ansible",
+  "main": "aidiag.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "glob": "^7.1.6"
+  }
+}
