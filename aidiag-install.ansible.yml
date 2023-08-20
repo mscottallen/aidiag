@@ -26,7 +26,12 @@
           dest: /usr/local/bin/aidiag/npm-dep.js
       
       - name: Running npm install
-        shell: node /usr/local/bin/aidiag/npm-dep.js
+        shell: cd /usr/local/bin/aidiag && npm init && npm install axios glob
+
+      - name: Copying startup wrapper
+        copy:
+          src: aidiag
+          dest: /usr/local/bin/aidiag
 
       - name: Sourcing bashrc
         shell: source ~/.bashrc
