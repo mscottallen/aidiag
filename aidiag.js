@@ -2,7 +2,7 @@
 
 const fs = require('fs');
 const axios = require('axios');
-const globFunction = require('glob');
+const glob = require('glob');
 const readline = require('readline');
 
 const API_URL = "https://api.openai.com/v2/engines/davinci/completions";
@@ -20,7 +20,7 @@ const rl = readline.createInterface({
 async function aggregateLogs() {
     return new Promise((resolve, reject) => {
         const directory = process.cwd();
-        globFunction(directory + '/**/*.{log,out,txt,json}', {}, (err, files) => {
+        glob(directory + '/**/*.{log,out,txt,json}', {}, (err, files) => {
             if (err) return reject(err);
             console.log(files); // Just print the files for now
             resolve();
