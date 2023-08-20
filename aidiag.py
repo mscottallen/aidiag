@@ -22,16 +22,23 @@ def chunk_text(text, size=2000):
     return [text[i:i+size] for i in range(0, len(text), size)]
 
 def stream_logs_to_chatgpt():
-    model_name = "gpt-3.5-turbo"  # or whatever the appropriate model is
+    model_name = "gpt-3.5-turbo"
     logs = get_log_files()
     
     for log in logs:
         chunks = chunk_text(log)
         for chunk in chunks:
-            response = openai.Completion.create(
+            messages = [
+                {"role": "system", "content": "You are a helpful assistant. Analyze the provided logs."},
+                {"role": "user", "content": f"Analyze the following logs:\n{chunk}"}
+            ]
+            
+            response = openai.ChatCompletion.create(
                 model=model_name,
-                prompt=f"Analyze the following logs:\n{chunk}"
+                messages=messages
             )
-            print(response.choices[0].text.strip())
+            
+            # Print the assistant's response (the last message in the response).
+            print(response['choices'][0]['message']['content'].strip())
 
 stream_logs_to_chatgpt()
