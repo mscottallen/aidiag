@@ -18,7 +18,7 @@ def chunk_text(text, size=2000):
     return [text[i:i+size] for i in range(0, len(text), size)]
 
 def ingest_logs():
-    model_name = "gpt-3.5-turbo"
+    model_name = "gpt-3.5-turbo-16k"
     logs = get_log_files()
 
     # Combine all logs into a single string
