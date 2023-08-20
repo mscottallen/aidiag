@@ -1,0 +1,41 @@
+---
+ - name: Install and configure AiDiag
+   hosts: all
+   gather_facts: no
+   ignore_errors: no
+
+   tasks:
+      - name: Installing python3
+        package:
+          name: python3
+          state: present
+      
+      - name: Installing pip
+        package:
+          name: python3-pip
+          state: present
+      
+      - name: Creating directory tree
+        file:
+          path: "/usr/local/aidiag"
+          state: directory
+
+      - name: Copying AiDiag files 1/2
+        copy:
+          src: aidiag.py
+          dest: /usr/local/aidiag/aidiag.py
+
+      - name: Copying AiDiag files 2/2
+        copy:
+          src: requirements.txt
+          dest: /usr/local/aidiag/requirements.txt
+      
+      - name: Copying shell wrapper
+        copy:
+          src: aidiag
+          dest: /usr/local/bin/aidiag
+
+      - name: Installing AiDiag requirements
+        pip:
+          requirements: /usr/local/aidiag/requirements.txt
+          executable: pip3
