@@ -50,6 +50,17 @@ def stream_logs_to_chatgpt(brief):
             # Print the assistant's response (the last message in the response).
             print(response['choices'][0]['message']['content'].strip())
 
+def prepare_logs_for_chat():
+    """Load and chunk logs without sending them to the model."""
+    logs = get_log_files()
+    all_chunks = []
+    
+    for log in logs:
+        chunks = chunk_text(log)
+        all_chunks.extend(chunks)
+        
+    return all_chunks
+
 def interactive_chat():
     model_name = "gpt-3.5-turbo"
     print("Logs have been ingested. What would you like to troubleshoot?")
@@ -84,14 +95,15 @@ def main():
     
     args = parser.parse_args()
 
-    # Default to verbose if no option is provided
-    if not args.brief and not args.verbose:
-        args.verbose = True
-
-    stream_logs_to_chatgpt(brief=args.brief)
-    
     if args.interactive:
+        # If interactive flag is set, prepare the logs for chat without analyzing
+        prepare_logs_for_chat()
         interactive_chat()
+        return
+    
+    # If only brief or verbose is chosen without -i flag
+    if args.brief or args.verbose:
+        stream_logs_to_chatgpt(brief=args.brief)
 
 if __name__ == '__main__':
     main()
