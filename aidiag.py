@@ -30,8 +30,12 @@ def stream_logs_to_chatgpt(brief):
         chunks = chunk_text(log)
         for chunk in chunks:
             instruction = "Summarize the main points of the following logs:" if brief else "Analyze the following logs and provide a detailed response:"
+            
             messages = [
-                {"role": "system", "content": "You are a helpful assistant."},
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant. The user is a full stack developer and the logs you're analyzing come from their servers. Provide information assuming they have full control and knowledge of the system, avoiding references to third-party administrators."
+                },
                 {"role": "user", "content": f"{instruction}\n{chunk}"}
             ]
             
