@@ -29,7 +29,7 @@ def stream_logs_to_chatgpt():
         for chunk in chunks:
             # Your earlier code to send this chunk to ChatGPT and get a response
             response = openai.Completion.create(
-                model="gpt-4.0-turbo",
+                model="gpt-3.5-turbo-16k",
                 messages=[
                     {"role": "system", "content": "You are a helpful assistant."},
                     {"role": "user", "content": chunk}
