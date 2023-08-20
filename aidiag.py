@@ -18,7 +18,7 @@ def chunk_text(text, size=2000):
     return [text[i:i+size] for i in range(0, len(text), size)]
 
 def ingest_logs():
-    model_name = "gpt-3.5-turbo"
+    model_name = "gpt-3.5-turbo-16k"
     logs = get_log_files()
     messages = [
         {
@@ -37,7 +37,7 @@ def ingest_logs():
     return messages
 
 def interactive_chat(messages):
-    model_name = "gpt-3.5-turbo"
+    model_name = "gpt-3.5-turbo-16k"
     print("Logs have been ingested. What would you like to troubleshoot?")
 
     while True:
