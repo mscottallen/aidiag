@@ -18,7 +18,7 @@ def chunk_text(text, size=2000):
     return [text[i:i+size] for i in range(0, len(text), size)]
 
 def ingest_logs():
-    model_name = "gpt-3.5-turbo-16k"
+    model_name = "gpt-3.5-turbo"
     logs = get_log_files()
 
     # Combine all logs into a single string
@@ -26,7 +26,7 @@ def ingest_logs():
 
     # Truncate logs to fit within model's token limit
     MAX_TOKENS = 16300  # Setting a slightly lower limit to account for other message tokens
-    truncated_logs = openai.Completion.create(model=model_name, prompt=all_logs, max_tokens=MAX_TOKENS).choices[0].text
+    truncated_logs = all_logs[:MAX_TOKENS]  # Slice the string to fit the limit
 
     messages = [
         {
