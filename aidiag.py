@@ -50,15 +50,17 @@ def stream_logs_to_chatgpt(brief):
 def main():
     parser = argparse.ArgumentParser(description="Send log files in the current directory to ChatGPT for debugging.",
                                      epilog="During the stream of logs, you can press the 'q' key followed by 'Enter' to stop the stream, or use CTRL+C to interrupt it.")
-    group = parser.add_mutually_exclusive_group(required=True)
+    
+    # Note the removal of 'required=True'
+    group = parser.add_mutually_exclusive_group()
     group.add_argument("--brief", action="store_true", help="Provide a concise summary of the main issues in the logs.")
-    group.add_argument("--verbose", action="store_true", help="Provide a detailed analysis of the logs.")
+    
+    # Default is False, so it will run in verbose mode by default if no arguments are provided
+    group.add_argument("--verbose", action="store_true", default=True, help="Provide a detailed analysis of the logs.")
     args = parser.parse_args()
 
-    if args.brief:
-        stream_logs_to_chatgpt(brief=True)
-    else:
-        stream_logs_to_chatgpt(brief=False)
+    # Simplifying the logic
+    stream_logs_to_chatgpt(brief=args.brief)
 
 if __name__ == '__main__':
     main()
