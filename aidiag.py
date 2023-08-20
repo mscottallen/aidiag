@@ -43,22 +43,35 @@ def stream_logs_to_chatgpt(brief):
                 {"role": "user", "content": f"{instruction}\n{chunk}"}
             ]
             
-            try:
-                response = openai.ChatCompletion.create(
-                    model=model_name,
-                    messages=messages
-                )
-                # Print the assistant's response (the last message in the response).
-                print(response['choices'][0]['message']['content'].strip())
+            response = openai.ChatCompletion.create(
+                model=model_name,
+                messages=messages
+            )
+            # Print the assistant's response (the last message in the response).
+            print(response['choices'][0]['message']['content'].strip())
 
-                # Check for 'q' key input
-                key_input = input("Press 'q' to stop the stream or any other key to continue...")
-                if key_input == 'q':
-                    print("Stopping the stream...")
-                    return
-            except KeyboardInterrupt:
-                print("\nStream interrupted by user.")
-                return
+def interactive_chat():
+    model_name = "gpt-3.5-turbo"
+    print("Logs have been ingested. What would you like to troubleshoot?")
+    
+    while True:
+        user_input = input("You: ")
+        if user_input.lower() in ["quit", "exit", "q"]:
+            break
+        
+        messages = [
+            {
+                "role": "system",
+                "content": "You are a helpful assistant. The user is a full stack developer."
+            },
+            {"role": "user", "content": user_input}
+        ]
+        
+        response = openai.ChatCompletion.create(
+            model=model_name,
+            messages=messages
+        )
+        print("Assistant:", response['choices'][0]['message']['content'].strip())
 
 def main():
     parser = argparse.ArgumentParser(description="Send log files in the current directory to ChatGPT for debugging.",
@@ -67,6 +80,7 @@ def main():
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--brief", action="store_true", help="Provide a concise summary of the main issues in the logs.")
     group.add_argument("--verbose", action="store_true", help="Provide a detailed analysis of the logs.")
+    parser.add_argument("-i", "--interactive", action="store_true", help="Engage in an interactive chat with the model after ingesting logs.")
     
     args = parser.parse_args()
 
@@ -75,6 +89,9 @@ def main():
         args.verbose = True
 
     stream_logs_to_chatgpt(brief=args.brief)
+    
+    if args.interactive:
+        interactive_chat()
 
 if __name__ == '__main__':
     main()
