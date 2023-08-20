@@ -22,14 +22,14 @@ def chunk_text(text, size=2000):
     """Divide a large text into chunks of a specified size."""
     return [text[i:i+size] for i in range(0, len(text), size)]
 
-def stream_logs_to_chatgpt(brief, verbose):
+def stream_logs_to_chatgpt(brief):
     model_name = "gpt-3.5-turbo"
     logs = get_log_files()
     
     for log in logs:
         chunks = chunk_text(log)
         for chunk in chunks:
-            instruction = "Analyze the following logs and provide a detailed response:" if verbose else "Summarize the main points of the following logs:"
+            instruction = "Summarize the main points of the following logs:" if brief else "Analyze the following logs and provide a detailed response:"
             messages = [
                 {"role": "system", "content": "You are a helpful assistant."},
                 {"role": "user", "content": f"{instruction}\n{chunk}"}
@@ -45,9 +45,11 @@ def stream_logs_to_chatgpt(brief, verbose):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Stream logs to ChatGPT for analysis.")
-    group = parser.add_mutually_exclusive_group(required=True)
-    group.add_argument('--brief', action='store_true', help='Only summarize the main points of the logs.')
-    group.add_argument('--verbose', action='store_true', help='Provide a detailed response analyzing the logs.')
+    parser.add_argument('--brief', action='store_true', default=False, help='Only summarize the main points of the logs.')
+    parser.add_argument('--verbose', action='store_true', default=True, help='Provide a detailed response analyzing the logs (default behavior).')
     args = parser.parse_args()
 
-    stream_logs_to_chatgpt(args.brief, args.verbose)
+    if args.brief:
+        args.verbose = False
+
+    stream_logs_to_chatgpt(args.brief)
