@@ -18,24 +18,26 @@ def chunk_text(text, size=2000):
     return [text[i:i+size] for i in range(0, len(text), size)]
 
 def ingest_logs():
-    model_name = "gpt-3.5-turbo-16k"
+    model_name = "gpt-3.5-turbo"
     logs = get_log_files()
+
+    # Combine all logs into a single string
+    all_logs = "\n".join(logs)
+
+    # Truncate logs to fit within model's token limit
+    MAX_TOKENS = 16300  # Setting a slightly lower limit to account for other message tokens
+    truncated_logs = openai.Completion.create(model=model_name, prompt=all_logs, max_tokens=MAX_TOKENS).choices[0].text
+
     messages = [
         {
             "role": "system",
-            "content": "You are a helpful assistant. The user is a full stack developer and the logs you're analyzing come from their servers. Retain this context throughout the conversation."
-        }
+            "content": "You are a helpful assistant. The user is a full stack developer and the logs you're analyzing come from their servers. Remember the context of these logs for troubleshooting."
+        },
+        {"role": "user", "content": f"Ingest the following logs for analysis:\n{truncated_logs}"}
     ]
 
-    for log in logs:
-        chunks = chunk_text(log)
-        for chunk in chunks:
-            messages.append({"role": "user", "content": f"Ingesting log:\n{chunk}"})
-            response = openai.ChatCompletion.create(model=model_name, messages=messages)
-            messages.append({"role": "assistant", "content": response['choices'][0]['message']['content'].strip()})
-
+    response = openai.ChatCompletion.create(model=model_name, messages=messages)
     return messages
-
 
 def stream_logs_to_chatgpt(brief):
     model_name = "gpt-3.5-turbo-16k"
