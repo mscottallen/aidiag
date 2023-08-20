@@ -36,6 +36,34 @@ def ingest_logs():
 
     return messages
 
+
+def stream_logs_to_chatgpt(brief):
+    model_name = "gpt-3.5-turbo-16k"
+    logs = get_log_files()
+    for log in logs:
+        chunks = chunk_text(log)
+        for chunk in chunks:
+            if brief:
+                instruction = "Extract only the main issues or critical points from the following logs:"
+            else:
+                instruction = "Analyze the following logs and provide a detailed response:"
+            
+            messages = [
+                {
+                    "role": "system",
+                    "content": "You are a helpful assistant. The user is a full stack developer and the logs you're analyzing come from their servers. Provide information assuming they have full control and knowledge of the system, avoiding references to third-party administrators."
+                },
+                {"role": "user", "content": f"{instruction}\n{chunk}"}
+            ]
+            
+            response = openai.ChatCompletion.create(
+                model=model_name,
+                messages=messages
+            )
+            # Print the assistant's response (the last message in the response).
+            print(response['choices'][0]['message']['content'].strip())
+
+
 def interactive_chat(messages):
     model_name = "gpt-3.5-turbo-16k"
     print("Logs have been ingested. What would you like to troubleshoot?")
@@ -48,6 +76,7 @@ def interactive_chat(messages):
         messages.append({"role": "user", "content": user_input})
         response = openai.ChatCompletion.create(model=model_name, messages=messages)
         print("Assistant:", response['choices'][0]['message']['content'].strip())
+
 
 def main():
     parser = argparse.ArgumentParser(description="Send log files in the current directory to ChatGPT for debugging.",
@@ -64,9 +93,9 @@ def main():
         messages = ingest_logs()
         interactive_chat(messages)
     else:
-        if not args.brief and not args.verbose:
+        # Default to verbose if no option is provided
+        if not args.brief:
             args.verbose = True
-
         stream_logs_to_chatgpt(brief=args.brief)
 
 if __name__ == '__main__':
