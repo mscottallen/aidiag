@@ -3,14 +3,10 @@ import os
 from dotenv import load_dotenv
 import argparse
 
-# Load environment variables from .env file
 load_dotenv()
-
-# Set up OpenAI API key from the environment variable
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 def get_log_files():
-    """Return the content of all log files in the current directory."""
     logs = []
     for file in os.listdir():
         if file.endswith('.log'):
@@ -19,90 +15,58 @@ def get_log_files():
     return logs
 
 def chunk_text(text, size=2000):
-    """Divide a large text into chunks of a specified size."""
     return [text[i:i+size] for i in range(0, len(text), size)]
 
-def stream_logs_to_chatgpt(brief):
+def ingest_logs():
     model_name = "gpt-3.5-turbo"
     logs = get_log_files()
-    
+    messages = [
+        {
+            "role": "system",
+            "content": "You are a helpful assistant. The user is a full stack developer and the logs you're analyzing come from their servers. Retain this context throughout the conversation."
+        }
+    ]
+
     for log in logs:
         chunks = chunk_text(log)
         for chunk in chunks:
-            
-            if brief:
-                instruction = "Extract only the main issues or critical points from the following logs:"
-            else:
-                instruction = "Analyze the following logs and provide a detailed response:"
-            
-            messages = [
-                {
-                    "role": "system",
-                    "content": "You are a helpful assistant. The user is a full stack developer and the logs you're analyzing come from their servers. Provide information assuming they have full control and knowledge of the system, avoiding references to third-party administrators."
-                },
-                {"role": "user", "content": f"{instruction}\n{chunk}"}
-            ]
-            
-            response = openai.ChatCompletion.create(
-                model=model_name,
-                messages=messages
-            )
-            # Print the assistant's response (the last message in the response).
-            print(response['choices'][0]['message']['content'].strip())
+            messages.append({"role": "user", "content": f"Ingesting log:\n{chunk}"})
+            response = openai.ChatCompletion.create(model=model_name, messages=messages)
+            messages.append({"role": "assistant", "content": response['choices'][0]['message']['content'].strip()})
 
-def prepare_logs_for_chat():
-    """Load and chunk logs without sending them to the model."""
-    logs = get_log_files()
-    all_chunks = []
-    
-    for log in logs:
-        chunks = chunk_text(log)
-        all_chunks.extend(chunks)
-        
-    return all_chunks
+    return messages
 
-def interactive_chat():
+def interactive_chat(messages):
     model_name = "gpt-3.5-turbo"
     print("Logs have been ingested. What would you like to troubleshoot?")
-    
+
     while True:
         user_input = input("You: ")
         if user_input.lower() in ["quit", "exit", "q"]:
             break
-        
-        messages = [
-            {
-                "role": "system",
-                "content": "You are a helpful assistant. The user is a full stack developer."
-            },
-            {"role": "user", "content": user_input}
-        ]
-        
-        response = openai.ChatCompletion.create(
-            model=model_name,
-            messages=messages
-        )
+
+        messages.append({"role": "user", "content": user_input})
+        response = openai.ChatCompletion.create(model=model_name, messages=messages)
         print("Assistant:", response['choices'][0]['message']['content'].strip())
 
 def main():
     parser = argparse.ArgumentParser(description="Send log files in the current directory to ChatGPT for debugging.",
                                      epilog="During the stream of logs, you can press the 'q' key followed by 'Enter' to stop the stream, or use CTRL+C to interrupt it.")
-    
+
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--brief", action="store_true", help="Provide a concise summary of the main issues in the logs.")
     group.add_argument("--verbose", action="store_true", help="Provide a detailed analysis of the logs.")
     parser.add_argument("-i", "--interactive", action="store_true", help="Engage in an interactive chat with the model after ingesting logs.")
-    
+
     args = parser.parse_args()
 
     if args.interactive:
-        # If interactive flag is set, prepare the logs for chat without analyzing
-        prepare_logs_for_chat()
-        interactive_chat()
-        return
-    
-    # If only brief or verbose is chosen without -i flag
-    if args.brief or args.verbose:
+        messages = ingest_logs()
+        interactive_chat(messages)
+    else:
+        if not args.brief and not args.verbose:
+            args.verbose = True
+
         stream_logs_to_chatgpt(brief=args.brief)
 
 if __name__ == '__main__':
