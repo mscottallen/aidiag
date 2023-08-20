@@ -1,9 +1,0 @@
-#!/bin/bash
-
-DIR=${1:-.}
-TMP_FILE=$(mktemp /tmp/aidiag.XXXXXX)
-
-# Find and concatenate files
-find "$DIR" -type f \( -name "*.log" -o -name "*.out" -o -name "*.txt" -o -name "*.json" \) -exec cat {} + > "$TMP_FILE"
-
-echo "Logs aggregated to: $TMP_FILE"
