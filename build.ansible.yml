@@ -1,6 +1,7 @@
 ---
  - name: Install and configure AiDiag
-   hosts: all
+   hosts: localhost
+   connection: local
    gather_facts: no
    ignore_errors: no
 
