@@ -29,7 +29,7 @@ def stream_logs_to_chatgpt():
         chunks = chunk_text(log)
         for chunk in chunks:
             response = openai.Completion.create(
-                model=gpt-3.5-turbo-16k,
+                model=model_name,
                 prompt=f"Analyze the following logs:\n{chunk}"
             )
             print(response.choices[0].text.strip())
