@@ -9,6 +9,19 @@ load_dotenv()
 # Set up OpenAI API key from the environment variable
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
+def get_log_files():
+    """Return the content of all log files in the current directory."""
+    logs = []
+    for file in os.listdir():
+        if file.endswith('.log'):
+            with open(file, 'r') as log_file:
+                logs.append(log_file.read())
+    return logs
+
+def chunk_text(text, size=2000):
+    """Divide a large text into chunks of a specified size."""
+    return [text[i:i+size] for i in range(0, len(text), size)]
+
 def stream_logs_to_chatgpt(brief):
     model_name = "gpt-3.5-turbo"
     logs = get_log_files()
@@ -51,15 +64,15 @@ def main():
     parser = argparse.ArgumentParser(description="Send log files in the current directory to ChatGPT for debugging.",
                                      epilog="During the stream of logs, you can press the 'q' key followed by 'Enter' to stop the stream, or use CTRL+C to interrupt it.")
     
-    # Note the removal of 'required=True'
-    group = parser.add_mutually_exclusive_group()
-    group.add_argument("--brief", action="store_true", help="Provide a concise summary of the main issues in the logs.")
+    parser.add_argument("--brief", action="store_true", help="Provide a concise summary of the main issues in the logs.")
+    parser.add_argument("--verbose", action="store_true", default=True, help="Provide a detailed analysis of the logs.")
     
-    # Default is False, so it will run in verbose mode by default if no arguments are provided
-    group.add_argument("--verbose", action="store_true", default=True, help="Provide a detailed analysis of the logs.")
     args = parser.parse_args()
 
-    # Simplifying the logic
+    # If both brief and verbose are true, we set verbose to false. This is because verbose is true by default.
+    if args.brief:
+        args.verbose = False
+
     stream_logs_to_chatgpt(brief=args.brief)
 
 if __name__ == '__main__':
