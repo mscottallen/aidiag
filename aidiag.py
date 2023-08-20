@@ -22,19 +22,16 @@ def chunk_text(text, size=2000):
     return [text[i:i+size] for i in range(0, len(text), size)]
 
 def stream_logs_to_chatgpt():
-    openai.api_key = os.getenv("OPENAI_API_KEY")
+    model_name = "gpt-3.5-turbo"  # or whatever the appropriate model is
     logs = get_log_files()
+    
     for log in logs:
         chunks = chunk_text(log)
         for chunk in chunks:
-            # Your earlier code to send this chunk to ChatGPT and get a response
             response = openai.Completion.create(
-                model="gpt-3.5-turbo-16k",
-                messages=[
-                    {"role": "system", "content": "You are a helpful assistant."},
-                    {"role": "user", "content": chunk}
-                ]
+                model=gpt-3.5-turbo-16k,
+                prompt=f"Analyze the following logs:\n{chunk}"
             )
-            print(response.choices[0].message['content'])
+            print(response.choices[0].text.strip())
 
 stream_logs_to_chatgpt()
