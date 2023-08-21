@@ -19,10 +19,10 @@ You will also need an API key from OpenAI. To get one, follow the instructions [
 ### To Install via manually:
 
 - Execute `cd /opt` and then `git clone https://github.com/mallen7/aidiag.git`
-- Execute `cd aidiag` and then `pip3 install -r requirements.txt`
-- In `/usr/local/aidiag/env.sample` add your API keys and rename the file to `.env` (`sed -i 's/placeholder/<REPLACE_WITH_APIKEY>/g' /usr/local/aidiag/env.sample` then `mv /usr/local/aidiag/env.sample /usr/local/aidiag/.env`)
-- Copy the `aidiag` folder to `/usr/local/` (`cp -r aidiag /usr/local/`)
+- Copy the `aidiag/` folder to `/usr/local/` (`cp -r aidiag /usr/local/`)
 - Copy the `aidiag` file to `/usr/local/bin/` (`cp aidiag /usr/local/bin/`)
+- Execute `cd /usr/local/aidiag/` and then `pip3 install -r requirements.txt`
+- In `/usr/local/aidiag/env.sample` add your API keys and rename the file to `.env` (`sed -i 's/placeholder/<REPLACE_WITH_APIKEY>/g' /usr/local/aidiag/env.sample` then `mv /usr/local/aidiag/env.sample /usr/local/aidiag/.env`)
 - You can now run `aidiag` from anywhere on the system
 
 ## Usage
