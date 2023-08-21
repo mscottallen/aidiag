@@ -16,11 +16,13 @@ AiDiag is a Linux CLI tool that uses AI to help diagnose and troubleshoot issues
 
 ### To Install via manually:
 
-- Download the latest release from [here](https://github.com/mallen7/aidiag.git)
-- Run `cd aidiag` and then `pip3 install -r requirements.txt`
-- In `/usr/local/aidiag/env.sample` add your API keys and rename the file to `.env`
-- Copy the `aidiag` folder to `/usr/local/`
-- Copy the `aidiag` file to `/usr/local/bin/`
+- Execute `cd /opt` and then `git clone https://github.com/mallen7/aidiag.git`
+- Execute `cd aidiag` and then `pip3 install -r requirements.txt`
+- In `/usr/local/aidiag/env.sample` add your API keys and rename the file to `.env` 
+    (`sed -i 's/your_api_key_here/**<REPLACE_WITH_APIKEY>**/g' /usr/local/aidiag/env.sample` then `mv /usr/local/aidiag/env.sample /usr/local/aidiag/.env`)
+- Copy the `aidiag` folder to `/usr/local/` (`cp -r aidiag /usr/local/`)
+- Copy the `aidiag` file to `/usr/local/bin/` (`cp aidiag /usr/local/bin/`)
+- You can now run `aidiag` from anywhere on the system
 
 ## Usage
 [GIF Here](https://user.fm/files/v2-447c83075813b0d956c12d186fc4e2bb/AiDiag%20Walkthrough.gif)
