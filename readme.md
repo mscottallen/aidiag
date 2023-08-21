@@ -8,6 +8,8 @@ AiDiag is a Linux CLI tool that uses AI to help diagnose and troubleshoot issues
 - Python 3.6+
 - pip3
 
+You will also need an API key from OpenAI. To get one, follow the instructions [here](https://www.howtogeek.com/885918/how-to-get-an-openai-api-key/#:~:text=Key%20Takeaways%201%20Go%20to%20OpenAI%27s%20Platform%20website,Secret%20Key%22%20to%20generate%20a%20new%20API%20key.).
+
 ### To Install via Ansible:
 
 - Download the latest release from [here](https://github.com/mallen7/aidiag.git)
