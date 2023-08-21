@@ -2,10 +2,6 @@
 
 AiDiag is a Linux CLI tool that uses AI to help diagnose and troubleshoot issues on Linux systems. It is designed to ingest all of the log files in the current directory it is run in, uses AI to analyze the logs and then either outputs a diagnosis (-v, --verbose), a list of possible issues (-b, --brief), or starts a conversation with the user to allow the user to interactively work with the AI to figure out a diagnosis (-i, --interactive).
 
-## Usage
-
-![alt text](https://user.fm/files/v2-447c83075813b0d956c12d186fc4e2bb/AiDiag%20Walkthrough.gif)
-
 ## Installation
 
 *Dependencies*
@@ -25,3 +21,7 @@ AiDiag is a Linux CLI tool that uses AI to help diagnose and troubleshoot issues
 - In `/usr/local/aidiag/env.sample` add your API keys and rename the file to `.env`
 - Copy the `aidiag` folder to `/usr/local/`
 - Copy the `aidiag` file to `/usr/local/bin/`
+
+## Usage
+
+![alt text](https://user.fm/files/v2-447c83075813b0d956c12d186fc4e2bb/AiDiag%20Walkthrough.gif)
