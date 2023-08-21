@@ -23,5 +23,5 @@ AiDiag is a Linux CLI tool that uses AI to help diagnose and troubleshoot issues
 - Copy the `aidiag` file to `/usr/local/bin/`
 
 ## Usage
-
+[GIF Here](https://user.fm/files/v2-447c83075813b0d956c12d186fc4e2bb/AiDiag%20Walkthrough.gif)
 ![alt text](https://user.fm/files/v2-447c83075813b0d956c12d186fc4e2bb/AiDiag%20Walkthrough.gif)
