@@ -43,7 +43,7 @@
       - name: Adding API key
         lineinfile:
           path: /usr/local/aidiag/.env
-          line: "API_KEY={{ api_key }}"
+          line: "export OPENAI_API_KEY={{ api_key }}"
           state: present
       
       - name: Copying shell wrapper
