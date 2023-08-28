@@ -5,6 +5,9 @@
    gather_facts: no
    ignore_errors: no
 
+   vars:
+    api_key: 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
+
    tasks:
       - name: Installing python3
         package:
@@ -21,16 +24,27 @@
           path: "/usr/local/aidiag"
           state: directory
 
-      - name: Copying AiDiag files 1/2
+      - name: Copying AiDiag files 1/3
         copy:
           src: aidiag.py
           dest: /usr/local/aidiag/aidiag.py
           mode: +x
 
-      - name: Copying AiDiag files 2/2
+      - name: Copying AiDiag files 2/3
         copy:
           src: requirements.txt
           dest: /usr/local/aidiag/requirements.txt
+
+      - name: Copying AiDiag files 3/3
+        file:
+          path: "/usr/local/aidiag/.env"
+          state: touch
+
+      - name: Adding API key
+        lineinfile:
+          path: /usr/local/aidiag/.env
+          line: "API_KEY={{ api_key }}"
+          state: present
       
       - name: Copying shell wrapper
         copy:
